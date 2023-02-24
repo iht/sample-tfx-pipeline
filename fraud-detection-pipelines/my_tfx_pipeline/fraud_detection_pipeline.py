@@ -31,10 +31,10 @@ def create_pipeline(data_location: str,
 
     # Data validation
     # Computes statistics over data for visualization and example validation.
-    statistics_gen: StatisticsGen = StatisticsGen(examples=example_gen.outputs['examples'])
+    statistics_gen: StatisticsGen = None  # TODO
 
     # Schema inferred from stats
-    schema_gen: SchemaGen = SchemaGen(statistics=statistics_gen.outputs['statistics'])
+    schema_gen: SchemaGen = None  # TODO
 
     # Q: What if we don't want to infer the schema but check if the data complies with a certain schema?
     # A: We can use the ImportSchemaGen component, from a schema specified in some location (e.g. GCS)
@@ -43,9 +43,7 @@ def create_pipeline(data_location: str,
 
     # Performs anomaly detection based on statistics and data schema.
     # The output contains anomalies info (data drift, skew training-test)
-    example_validator = tfx.components.ExampleValidator(
-        statistics=statistics_gen.outputs['statistics'],
-        schema=schema_gen.outputs['schema'])
+    example_validator = None  # TODO
 
     # See https://www.tensorflow.org/tfx/data_validation/get_started
     # Q: What are the thresholds used to decide if an anomaly should stop the pipeline?
@@ -57,21 +55,11 @@ def create_pipeline(data_location: str,
     # https://github.com/tensorflow/metadata/blob/master/tensorflow_metadata/proto/v0/anomalies.proto
 
     # Feature engineering
-    transform: Transform = Transform(
-        examples=example_gen.outputs['examples'],
-        schema=schema_gen.outputs['schema'],
-        module_file=transform_fn_file)  # see feature_engineering_fn.py
+    transform: Transform = None  # TODO
 
     # Training
 
-    trainer = tfx.components.Trainer(
-        module_file=trainer_fn_file,
-        examples=transform.outputs['transformed_examples'],
-        transform_graph=transform.outputs['transform_graph'],
-        custom_config={
-            'batch_size': pipeline_configs.BATCH_SIZE,
-            'dataset_size': pipeline_configs.DATASET_SIZE
-        })
+    trainer = None  # TODO
 
     # Evaluate model (against baseline)
     model_resolver = tfx.dsl.Resolver(
@@ -97,11 +85,7 @@ def create_pipeline(data_location: str,
                         )]),
             })])
 
-    evaluator = tfx.components.Evaluator(
-        examples=transform.outputs['transformed_examples'],
-        model=trainer.outputs['model'],
-        baseline_model=model_resolver.outputs['model'],
-        eval_config=eval_config)
+    evaluator = None  # TODO
 
     # Publish model
     pusher = tfx.components.Pusher(
