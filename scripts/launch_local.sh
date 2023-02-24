@@ -1,0 +1,31 @@
+#
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#        http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+DATA_LOCATION=../data/
+
+PIPELINE_ROOT=../pipeline_local
+PIPELINE_NAME=fraud-detect-pipeline
+TRANSFORM_FN=./my_tfx_pipeline/feature_engineering_fn.py
+TRAINER_FN=./my_tfx_pipeline/trainer_fn.py
+
+cd fraud-detection-pipelines || exit
+
+python -m my_tfx_pipeline.fraud_detection_main  \
+  --data-location=$DATA_LOCATION \
+  --pipeline-roo=$PIPELINE_ROOT \
+  --pipeline-name=$PIPELINE_NAME \
+  --transform-fn-path=$TRANSFORM_FN \
+  --trainer-fn-path=$TRAINER_FN \
